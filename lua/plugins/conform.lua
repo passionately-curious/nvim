@@ -38,6 +38,8 @@ return { -- Autoformat
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
         html = { 'prettier' },
         css = { 'prettier' },
+        javascript = { 'prettier' },
+        go = { 'ast-grep' },
       },
     },
   },

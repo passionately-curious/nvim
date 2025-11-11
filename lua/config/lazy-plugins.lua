@@ -62,10 +62,11 @@ require('lazy').setup({
   require 'plugins.autopairs',
   require 'plugins.debug',
   require 'plugins.lint',
-  require 'plugins.neo-tree',
+  -- require 'plugins.neo-tree',
   require 'plugins.indent_line',
 
   require 'plugins.render-markdown',
+  require 'plugins.dashboard',
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
