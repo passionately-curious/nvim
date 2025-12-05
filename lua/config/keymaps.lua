@@ -37,6 +37,22 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+-- VimTeX keymaps
+vim.keymap.set('n', '<localleader>ll', '<cmd>VimtexCompile<CR>', { desc = 'VimTeX: Compile' })
+vim.keymap.set('n', '<localleader>lv', '<cmd>VimtexView<CR>', { desc = 'VimTeX: View' })
+vim.keymap.set('n', '<localleader>li', '<cmd>VimtexInfo<CR>', { desc = 'VimTeX: Info' })
+vim.keymap.set('n', '<localleader>lt', '<cmd>VimtexTocOpen<CR>', { desc = 'VimTeX: TOC' })
+
+-- build and run
+vim.keymap.set('n', '<leader>m', function()
+  -- save current buffer
+  vim.cmd 'write'
+  -- get current file name only
+  local fname = vim.fn.expand '%:t' -- e.g., "foo.c"
+  -- run make with SRC set
+  vim.cmd('!make run SRC=' .. fname)
+end, { noremap = true, silent = false, desc = 'Build & run current file' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -50,5 +66,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
-
-

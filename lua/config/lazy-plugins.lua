@@ -67,6 +67,7 @@ require('lazy').setup({
 
   require 'plugins.render-markdown',
   require 'plugins.dashboard',
+  require 'plugins.vimtex',
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
