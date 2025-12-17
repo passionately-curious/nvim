@@ -72,3 +72,43 @@ vim.o.confirm = true
 -- indentation
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
+vim.o.expandtab = true
+
+-- Filetype specific indentation preferences to match formatter outputs
+local indent_group = vim.api.nvim_create_augroup('custom-indent-preferences', { clear = true })
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = indent_group,
+  pattern = { 'tex', 'plaintex', 'markdown' },
+  callback = function(event)
+    local bo = vim.bo[event.buf]
+    bo.expandtab = true
+    bo.shiftwidth = 2
+    bo.tabstop = 2
+    bo.softtabstop = 2
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = indent_group,
+  pattern = { 'c', 'cpp' },
+  callback = function(event)
+    local bo = vim.bo[event.buf]
+    bo.expandtab = false
+    bo.shiftwidth = 0 -- follow tabstop so inserts literal tabs
+    bo.tabstop = 4
+    bo.softtabstop = 0
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = indent_group,
+  pattern = { 'python' },
+  callback = function(event)
+    local bo = vim.bo[event.buf]
+    bo.expandtab = true
+    bo.shiftwidth = 4
+    bo.tabstop = 4
+    bo.softtabstop = 4
+  end,
+})
