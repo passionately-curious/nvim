@@ -45,12 +45,26 @@ vim.keymap.set('n', '<localleader>lt', '<cmd>VimtexTocOpen<CR>', { desc = 'VimTe
 
 -- build and run
 vim.keymap.set('n', '<leader>m', function()
-  -- save current buffer
+  -- Save the current buffer
   vim.cmd 'write'
-  -- get current file name only
-  local fname = vim.fn.expand '%:t' -- e.g., "foo.c"
-  -- run make with SRC set
-  vim.cmd('!make run SRC=' .. fname)
+
+  -- Get the current file name and its directory
+  local fname = vim.fn.expand '%:t' -- e.g., "main.c"
+  local file_dir = vim.fn.expand '%:p:h' -- Get the directory of the current file
+
+  -- Debugging: Print out the current file and directory
+  print('Building and running:', fname)
+  print('File directory:', file_dir)
+
+  -- Run make in the file's directory inside a terminal split
+  local cmd = string.format('botright split | terminal cd %s && make run SRC=%s', vim.fn.shellescape(file_dir), vim.fn.shellescape(fname))
+
+  -- Debug output for the command
+  print('Executing command:', cmd)
+
+  -- Run the command
+  vim.cmd(cmd)
+  vim.cmd 'startinsert'
 end, { noremap = true, silent = false, desc = 'Build & run current file' })
 
 -- [[ Basic Autocommands ]]
