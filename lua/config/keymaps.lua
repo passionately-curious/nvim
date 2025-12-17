@@ -80,3 +80,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
+
+-- Toggle showing all diagnostics (warnings/errors)
+vim.keymap.set('n', '<leader>td', function()
+  vim.diagnostic.enable(false) -- disable all diagnostics
+end, { desc = 'Disable diagnostics' })
+
+vim.keymap.set('n', '<leader>te', function()
+  vim.diagnostic.enable() -- enable them again
+end, { desc = 'Enable diagnostics' })
