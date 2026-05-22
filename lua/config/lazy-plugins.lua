@@ -682,6 +682,9 @@ require('lazy').setup({
   --
   require 'plugins.colorscheme',
   require 'plugins.vimtex',
+  require 'plugins.zk',
+  require 'plugins.render-markdown',
+  require 'plugins.image',
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',

@@ -69,6 +69,43 @@ vim.keymap.set("n", "<leader>tp", cp.paste_template, {
   desc = "Paste CP template",
 })
 
+-- zk
+-- vim.keymap.set("n", "<leader>zN", "<Cmd>ZkNew<CR>")
+-- vim.keymap.set("n", "<leader>zd", function()
+--   vim.fn.system({ "zk", "new", "Personal/daily-note" })
+-- end, { desc = "Daily note" })
+--
+vim.keymap.set("n", "<leader>zd", function()
+  local path = vim.fn.expand(
+    "~/Matrix/enigma/Personal/daily-note/" ..
+    os.date("%Y-%m-%d") ..
+    ".md"
+  )
+
+  if vim.fn.filereadable(path) == 0 then
+    vim.fn.system({
+      "zk",
+      "new",
+      "Personal/daily-note",
+    })
+  end
+
+  vim.cmd("edit " .. vim.fn.fnameescape(path))
+end, { desc = "Daily note" })
+
+vim.keymap.set("n", "<leader>zn", function()
+  vim.ui.input({ prompt = "Note title: " }, function(title)
+    if title and title ~= "" then
+      vim.cmd("ZkNew { title = '" .. title .. "' }")
+    end
+  end)
+end)
+
+vim.keymap.set("n", "<leader>zf", "<Cmd>ZkNotes<CR>")
+vim.keymap.set("n", "<leader>zb", "<Cmd>ZkBacklinks<CR>")
+vim.keymap.set("n", "<leader>zl", "<Cmd>ZkLinks<CR>")
+vim.keymap.set("n", "<leader>zt", "<Cmd>ZkTags<CR>")
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
