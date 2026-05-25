@@ -95,9 +95,17 @@ end, { desc = "Daily note" })
 
 vim.keymap.set("n", "<leader>zn", function()
   vim.ui.input({ prompt = "Note title: " }, function(title)
-    if title and title ~= "" then
-      vim.cmd("ZkNew { title = '" .. title .. "' }")
+    if not title or title == "" then
+      return
     end
+
+    local dir = vim.fn.expand("%:p:h")
+
+    vim.cmd(string.format(
+      "ZkNew { title = %q, dir = %q }",
+      title,
+      dir
+    ))
   end)
 end)
 
