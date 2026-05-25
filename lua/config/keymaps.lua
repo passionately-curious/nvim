@@ -57,16 +57,15 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
-
 -- cp boilerplate
-local cp = require("scripts.cp-boilerplate")
+local cp = require 'scripts.cp-boilerplate'
 
-vim.keymap.set("n", "<leader>nf", cp.new_file_from_template, {
-  desc = "New CP file",
+vim.keymap.set('n', '<leader>nf', cp.new_file_from_template, {
+  desc = 'New CP file',
 })
 
-vim.keymap.set("n", "<leader>tp", cp.paste_template, {
-  desc = "Paste CP template",
+vim.keymap.set('n', '<leader>tp', cp.paste_template, {
+  desc = 'Paste CP template',
 })
 
 -- zk
@@ -75,44 +74,128 @@ vim.keymap.set("n", "<leader>tp", cp.paste_template, {
 --   vim.fn.system({ "zk", "new", "Personal/daily-note" })
 -- end, { desc = "Daily note" })
 --
-vim.keymap.set("n", "<leader>zd", function()
-  local path = vim.fn.expand(
-    "~/Matrix/enigma/Personal/daily-note/" ..
-    os.date("%Y-%m-%d") ..
-    ".md"
-  )
+vim.keymap.set('n', '<leader>zd', function()
+  local path = vim.fn.expand('~/Matrix/enigma/Personal/daily-note/' .. os.date '%Y-%m-%d' .. '.md')
 
-  if vim.fn.filereadable(path) == 0 then
-    vim.fn.system({
-      "zk",
-      "new",
-      "Personal/daily-note",
-    })
-  end
+  if vim.fn.filereadable(path) == 0 then vim.fn.system {
+    'zk',
+    'new',
+    'Personal/daily-note',
+  } end
 
-  vim.cmd("edit " .. vim.fn.fnameescape(path))
-end, { desc = "Daily note" })
+  vim.cmd('edit ' .. vim.fn.fnameescape(path))
+end, { desc = 'Daily note' })
 
-vim.keymap.set("n", "<leader>zn", function()
-  vim.ui.input({ prompt = "Note title: " }, function(title)
-    if not title or title == "" then
-      return
-    end
+vim.keymap.set('n', '<leader>zn', function()
+  vim.ui.input({ prompt = 'Note title: ' }, function(title)
+    if not title or title == '' then return end
 
-    local dir = vim.fn.expand("%:p:h")
+    local dir = vim.fn.expand '%:p:h'
 
-    vim.cmd(string.format(
-      "ZkNew { title = %q, dir = %q }",
-      title,
-      dir
-    ))
+    vim.cmd(string.format('ZkNew { title = %q, dir = %q }', title, dir))
   end)
 end)
 
-vim.keymap.set("n", "<leader>zf", "<Cmd>ZkNotes<CR>")
-vim.keymap.set("n", "<leader>zb", "<Cmd>ZkBacklinks<CR>")
-vim.keymap.set("n", "<leader>zl", "<Cmd>ZkLinks<CR>")
-vim.keymap.set("n", "<leader>zt", "<Cmd>ZkTags<CR>")
+vim.keymap.set('n', '<leader>zf', '<Cmd>ZkNotes<CR>')
+vim.keymap.set('n', '<leader>zb', '<Cmd>ZkBacklinks<CR>')
+vim.keymap.set('n', '<leader>zl', '<Cmd>ZkLinks<CR>')
+vim.keymap.set('n', '<leader>zt', '<Cmd>ZkTags<CR>')
+
+-- for cp
+vim.keymap.set('n', '<leader>cb', function()
+  vim.cmd 'write'
+  vim.cmd('!make build FILE=' .. vim.fn.shellescape(vim.fn.expand '%'))
+end, { desc = 'CP Build' })
+
+vim.keymap.set('n', '<leader>ct', function()
+  vim.cmd 'write'
+  vim.cmd 'botright split'
+  vim.cmd('terminal make run FILE=' .. vim.fn.shellescape(vim.fn.expand '%'))
+end, { desc = 'CP Test' })
+
+vim.keymap.set('n', '<leader>cr', function()
+  vim.cmd 'write'
+
+  local session = vim.fn.system "tmux display-message -p '#S'"
+  session = session:gsub('%s+$', '')
+
+  local file = vim.fn.expand '%'
+
+  vim.fn.system {
+    'tmux',
+    'send-keys',
+    '-t',
+    session .. ':run',
+    'make run FILE=' .. file,
+    'C-m',
+  }
+
+  vim.fn.system {
+    'tmux',
+    'select-window',
+    '-t',
+    session .. ':run',
+  }
+end, { desc = 'CP Run in tmux' })
+
+vim.keymap.set('n', '<leader>ca', function()
+  local session = vim.fn.system "tmux display-message -p '#S'"
+  session = session:gsub('%s+$', '')
+
+  local file = vim.fn.expand '%'
+  local input = vim.fn.expand '%:r' .. '.in'
+
+  if vim.fn.filereadable(input) == 0 then
+    vim.notify('Input file not found: ' .. input, vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd 'write'
+
+  vim.fn.system {
+    'tmux',
+    'send-keys',
+    '-t',
+    session .. ':run',
+    string.format('make run FILE=%s < %s', file, input),
+    'C-m',
+  }
+
+  vim.fn.system {
+    'tmux',
+    'select-window',
+    '-t',
+    session .. ':run',
+  }
+end, { desc = 'CP Run with basename.in' })
+
+vim.keymap.set('n', '<leader>ci', function()
+  vim.ui.input({ prompt = 'Input file: ' }, function(input)
+    if not input or input == '' then return end
+
+    local session = vim.fn.system "tmux display-message -p '#S'"
+    session = session:gsub('%s+$', '')
+
+    local file = vim.fn.expand '%'
+
+    vim.cmd 'write'
+
+    vim.fn.system {
+      'tmux',
+      'send-keys',
+      '-t',
+      session .. ':run',
+      string.format('make run FILE=%s < %s', file, input),
+      'C-m',
+    }
+    vim.fn.system {
+      'tmux',
+      'select-window',
+      '-t',
+      session .. ':run',
+    }
+  end)
+end, { desc = 'CP Run with input file' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -125,6 +208,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function() vim.hl.on_yank() end,
 })
-
-
-
