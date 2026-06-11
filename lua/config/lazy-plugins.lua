@@ -495,6 +495,17 @@ require('lazy').setup({
           -- },
         },
         opts = {},
+        config = function()
+          require('luasnip.loaders.from_lua').lazy_load {
+            paths = vim.fn.stdpath 'config' .. '/lua/LuaSnip',
+          }
+
+          local ls = require 'luasnip'
+
+          vim.keymap.set('i', '<C-k>', function()
+            if ls.expand_or_jumpable() then ls.expand_or_jump() end
+          end, { desc = 'LuaSnip expand or jump' })
+        end,
       },
     },
     ---@module 'blink.cmp'
@@ -523,6 +534,9 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
+        ['<C-space>'] = false,
+        ['<C-j>'] = { 'show', 'show_documentation', 'hide_documentation' },
+        ['<C-k>'] = false,
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -723,5 +737,3 @@ require('lazy').setup({
     },
   },
 })
-
-
