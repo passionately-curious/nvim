@@ -356,6 +356,8 @@ require('lazy').setup({
       ---@type table<string, vim.lsp.Config>
       local servers = {
         clangd = {},
+        -- basedpyright = {},
+        pyright = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -715,6 +717,7 @@ require('lazy').setup({
   require 'plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
+  require 'plugins.lean',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
